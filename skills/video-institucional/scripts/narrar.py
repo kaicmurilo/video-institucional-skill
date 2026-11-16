@@ -106,14 +106,15 @@ def falado(texto: str) -> str:
     return texto
 
 
+vel_chave = vel if motor == "edge" else ""  # mudar a velocidade regera as frases
 novo, total, geradas = {}, 0.0, 0
 for b in rot["blocos"]:
     novo[b["id"]] = []
-    velhas = {(x.get("falado", x["texto"]), x.get("motor"), x.get("voz")): x for x in antigo.get(b["id"], [])}
+    velhas = {(x.get("falado", x["texto"]), x.get("motor"), x.get("voz"), x.get("vel", "")): x for x in antigo.get(b["id"], [])}
     for k, f in enumerate(b["frases"]):
         arq = A / f"{b['id']}_{k:02d}.mp3"
         fala = falado(f["texto"])
-        chave = (fala, motor, voz)
+        chave = (fala, motor, voz, vel_chave)
         v = velhas.get(chave)
         if v and (A / v["arquivo"]).exists():
             if v["arquivo"] != arq.name:
@@ -135,7 +136,7 @@ for b in rot["blocos"]:
             bruto.unlink()
             d = round(duracao(arq), 3)
             geradas += 1
-        novo[b["id"]].append({"texto": f["texto"], "falado": fala, "d": d, "arquivo": arq.name, "motor": motor, "voz": voz})
+        novo[b["id"]].append({"texto": f["texto"], "falado": fala, "d": d, "arquivo": arq.name, "motor": motor, "voz": voz, "vel": vel_chave})
         total += d
     print(f"{b['id']}: {len(b['frases'])} frases")
 idx.write_text(json.dumps(novo, ensure_ascii=False, indent=1), encoding="utf-8")
