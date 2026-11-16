@@ -18,8 +18,6 @@ claude plugin marketplace add kaicmurilo/video-institucional-skill
 claude plugin install video-institucional@video-institucional-skill
 ```
 
-O repositório é privado: a máquina precisa de acesso ao GitHub (`gh auth login` ou chave SSH).
-
 Depois, confira o ambiente (Python 3.10+, playwright, edge-tts, ffmpeg):
 
 ```bash
