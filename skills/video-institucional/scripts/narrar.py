@@ -13,6 +13,7 @@ Frases que não mudaram (mesmo texto, motor e voz) não são geradas de novo.
 import asyncio
 import json
 import os
+import re
 import sys
 
 from comum import duracao, ffmpeg, pasta_arg, roteiro
@@ -95,13 +96,24 @@ def openrouter(texto, out):
     out.write_bytes(r.content)
 
 
+PRONUNCIA = rot.get("pronuncia", {})
+
+
+def falado(texto: str) -> str:
+    """Texto enviado à voz: troca termos (marcas, palavras em inglês) pela grafia de como se falam."""
+    for termo in sorted(PRONUNCIA, key=len, reverse=True):
+        texto = re.sub(rf"(?<!\w){re.escape(termo)}(?!\w)", PRONUNCIA[termo], texto, flags=re.IGNORECASE)
+    return texto
+
+
 novo, total, geradas = {}, 0.0, 0
 for b in rot["blocos"]:
     novo[b["id"]] = []
-    velhas = {(x["texto"], x.get("motor"), x.get("voz")): x for x in antigo.get(b["id"], [])}
+    velhas = {(x.get("falado", x["texto"]), x.get("motor"), x.get("voz")): x for x in antigo.get(b["id"], [])}
     for k, f in enumerate(b["frases"]):
         arq = A / f"{b['id']}_{k:02d}.mp3"
-        chave = (f["texto"], motor, voz)
+        fala = falado(f["texto"])
+        chave = (fala, motor, voz)
         v = velhas.get(chave)
         if v and (A / v["arquivo"]).exists():
             if v["arquivo"] != arq.name:
@@ -110,11 +122,11 @@ for b in rot["blocos"]:
         else:
             bruto = arq.with_suffix(".bruto.mp3")
             if motor == "edge":
-                asyncio.run(edge(f["texto"], bruto))
+                asyncio.run(edge(fala, bruto))
             elif motor == "openrouter":
-                openrouter(f["texto"], bruto)
+                openrouter(fala, bruto)
             else:
-                eleven(f["texto"], bruto)
+                eleven(fala, bruto)
             # tira o silêncio do começo e do fim, para o sincronismo ficar exato
             ffmpeg(["-i", bruto, "-af",
                     "silenceremove=start_periods=1:start_threshold=-45dB,areverse,"
@@ -123,7 +135,7 @@ for b in rot["blocos"]:
             bruto.unlink()
             d = round(duracao(arq), 3)
             geradas += 1
-        novo[b["id"]].append({"texto": f["texto"], "d": d, "arquivo": arq.name, "motor": motor, "voz": voz})
+        novo[b["id"]].append({"texto": f["texto"], "falado": fala, "d": d, "arquivo": arq.name, "motor": motor, "voz": voz})
         total += d
     print(f"{b['id']}: {len(b['frases'])} frases")
 idx.write_text(json.dumps(novo, ensure_ascii=False, indent=1), encoding="utf-8")
