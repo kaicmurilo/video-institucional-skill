@@ -8,7 +8,7 @@ import sys
 SKILL = pathlib.Path(__file__).resolve().parent.parent
 MODELO = SKILL / "modelo"
 GAP = 0.4            # pausa entre frases (s)
-LARGURA, ALTURA, FPS = 1920, 1080, 30
+LARGURA, ALTURA, FPS = 1920, 1080, 30   # padrão; o roteiro pode trocar com "tamanho"
 X264 = ["-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p", "-r", str(FPS)]
 AAC = ["-c:a", "aac", "-b:a", "160k", "-ar", "44100", "-ac", "2"]
 
@@ -85,3 +85,9 @@ def narracao(pasta: pathlib.Path, rot: dict) -> dict:
         if not fs or [x["texto"] for x in fs] != [f["texto"] for f in b["frases"]]:
             raise SystemExit(f"a narração do bloco '{b['id']}' está desatualizada. Rode de novo: python scripts/narrar.py <pasta>")
     return n
+
+
+def tamanho(rot: dict) -> tuple:
+    """(largura, altura) do vídeo: "tamanho": [1080, 1920] no roteiro para vertical (celular)."""
+    largura, altura = rot.get("tamanho", [LARGURA, ALTURA])
+    return int(largura), int(altura)

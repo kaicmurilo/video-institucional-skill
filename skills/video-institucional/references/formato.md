@@ -44,6 +44,7 @@ São dois tipos de bloco, intercalados:
 | CTA | 3 s | A logo, o nome do produto e a chamada ("Fale com a gente"). |
 
 **Regras da propaganda:**
+- Para celular: `"tamanho": [1080, 1920]` no roteiro e `html,body` com 1080×1920 no `cenas.html`. Empilhe o conteúdo na vertical, deixe ~250 px livres no topo e ~350 px embaixo (interface do Reels/Stories) e use texto de 110 a 150 px.
 - Uma ideia por cena e texto grande, de 90 a 140 px.
 - Movimento em toda cena, com `data-delay` para escalonar.
 - Sem legenda: o próprio texto carrega a mensagem e funciona sem som.

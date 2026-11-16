@@ -4,19 +4,20 @@ Uso: python scripts/montar.py <pasta> <saida.mp4>
 
 Cada bloco vira um trecho com fade e com o áudio de cada frase no instante em que ela começou na gravação.
 Se o roteiro tiver "trilha": {"arquivo": "...mp3", "volume": 0.2}, a trilha entra por baixo da voz no vídeo
-inteiro, com fade no começo e no fim. Saída 1920x1080, 30 fps, x264 crf 18.
+inteiro, com fade no começo e no fim. Saída 1920x1080 (ou "tamanho" do roteiro), 30 fps, x264 crf 18.
 """
 import json
 import pathlib
 import sys
 
-from comum import AAC, ALTURA, FPS, LARGURA, X264, duracao, ffmpeg, narracao, pasta_arg, roteiro
+from comum import AAC, FPS, X264, duracao, ffmpeg, narracao, pasta_arg, roteiro, tamanho
 
 pasta = pasta_arg()
 if len(sys.argv) < 3:
     raise SystemExit(__doc__)
 saida = pathlib.Path(sys.argv[2]).resolve()
 rot = roteiro(pasta)
+LARGURA, ALTURA = tamanho(rot)
 narr = narracao(pasta, rot)
 fade = 0.2 if rot.get("formato") == "propaganda" else 0.4
 A, B = pasta / "audio", pasta / "brutos"

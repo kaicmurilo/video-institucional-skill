@@ -32,6 +32,7 @@
 }
 ```
 
+- `tamanho` (opcional): `[largura, altura]` do vídeo. Padrão `[1920, 1080]`; para celular (Reels, Stories, Shorts, WhatsApp) use `[1080, 1920]` e desenhe o `cenas.html` nessa medida.
 - `formato` aceita `institucional` ou `propaganda`. A `trilha` é opcional. `demo` só é necessário quando houver blocos `demo`.
 - Cada **frase** vira um áudio. Ela pode ser texto simples (nas cenas) ou um objeto `{texto, antes, acoes}`:
   - `antes`: ações que rodam **antes** de a frase começar, como navegar, clicar ou digitar. A frase espera essas ações terminarem.

@@ -27,7 +27,7 @@ import sys
 import time
 from urllib.parse import parse_qsl, urljoin, urlparse
 
-from comum import GAP, narracao, roteiro
+from comum import GAP, narracao, roteiro, tamanho
 
 ap = argparse.ArgumentParser()
 ap.add_argument("pasta")
@@ -39,6 +39,7 @@ if not (PASTA / "roteiro.json").exists():
     raise SystemExit(f"não achei {PASTA / 'roteiro.json'}")
 ROT = roteiro(PASTA)
 FORMATO = ROT.get("formato", "institucional")
+W, H = tamanho(ROT)
 RITMO = {"institucional": {"entrada": 0.4, "saida": 0.6, "gap": GAP, "final": 1.2},
          "propaganda": {"entrada": 0.1, "saida": 0.05, "gap": 0.25, "final": 1.0}}[FORMATO]
 NARR = None if args.previa else narracao(PASTA, ROT)
@@ -135,7 +136,7 @@ class Tela:
             await self.cdp.send("Page.stopScreencast")
         except Exception:
             pass
-        await self.cdp.send("Page.startScreencast", {"format": "jpeg", "quality": 92, "maxWidth": 1920, "maxHeight": 1080, "everyNthFrame": 1})
+        await self.cdp.send("Page.startScreencast", {"format": "jpeg", "quality": 92, "maxWidth": max(W, H), "maxHeight": max(W, H), "everyNthFrame": 1})
 
     async def comecar(self, d: pathlib.Path):
         shutil.rmtree(d, ignore_errors=True)
@@ -219,13 +220,13 @@ async def main():
 
         async def tela_cena():
             if "cena" not in telas:
-                ctx = await b.new_context(viewport={"width": 1920, "height": 1080}, device_scale_factor=1)
+                ctx = await b.new_context(viewport={"width": W, "height": H}, device_scale_factor=1)
                 pg = await ctx.new_page()
                 await pg.goto(cenas_html.as_uri(), wait_until="networkidle")
                 await pg.evaluate("document.fonts.ready.then(() => 1)")
                 if not await pg.evaluate("typeof window.__mostrar === 'function' && typeof window.__frase === 'function'"):
                     raise SystemExit("cenas.html precisa definir window.__mostrar e window.__frase (veja o modelo)")
-                t = Tela(pg, (1920, 1080), 1)
+                t = Tela(pg, (W, H), 1)
                 await t.iniciar()
                 telas["cena"] = t
             return telas["cena"]
@@ -233,7 +234,7 @@ async def main():
         async def tela_demo():
             if "demo" not in telas:
                 vw, vh = DEMO.get("viewport", [1440, 810])
-                esc = float(DEMO.get("escala", 1920 / vw))
+                esc = float(DEMO.get("escala", W / vw))
                 ctx = await b.new_context(viewport={"width": vw, "height": vh}, device_scale_factor=esc, accept_downloads=False)
                 mock = carregar_mock()
                 if DEMO.get("interceptar"):
