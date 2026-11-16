@@ -25,6 +25,18 @@ W.mkdir(exist_ok=True)
 for f in W.glob("*"):
     f.unlink()
 
+def um_quadro_por_slot(quadros):
+    """Mantém o último quadro de cada fatia de 1/FPS s, carimbado no início da fatia.
+
+    O screencast manda até ~60 quadros/s e cada quadro abaixo dura no mínimo 1/FPS s;
+    sem isso o vídeo estica e atrasa em relação à narração.
+    """
+    por_slot = {}
+    for q in sorted(quadros, key=lambda q: q["t"]):
+        por_slot[int(q["t"] * FPS + 1e-6)] = q
+    return [{**q, "t": slot / FPS} for slot, q in sorted(por_slot.items())]
+
+
 partes = []
 for i, bloco in enumerate(rot["blocos"]):
     d = B / bloco["id"]
@@ -34,7 +46,7 @@ for i, bloco in enumerate(rot["blocos"]):
     if len(log["frases"]) != len(bloco["frases"]):
         raise SystemExit(f"a gravação do bloco '{bloco['id']}' é de outra versão do roteiro. Regrave esse bloco.")
     fim = log["fim"]
-    qs = log["quadros"]
+    qs = um_quadro_por_slot(log["quadros"])
     lista = d / "quadros.txt"
     with open(lista, "w", encoding="utf-8") as fh:
         for j, q in enumerate(qs):
