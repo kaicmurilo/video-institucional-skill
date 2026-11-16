@@ -34,6 +34,7 @@
 
 - `tamanho` (opcional): `[largura, altura]` do vídeo. Padrão `[1920, 1080]`; para celular (Reels, Stories, Shorts, WhatsApp) use `[1080, 1920]` e desenhe o `cenas.html` nessa medida.
 - `pronuncia` (opcional): `{"termo": "como se fala"}` para marcas e palavras em inglês que a voz lê errado, por exemplo `{"checklist": "tchéc-list", "WhatsApp": "uótsap"}`. Vale só para a voz; a legenda continua com o texto original. Ouça o resultado e ajuste a grafia.
+- `ritmo` (opcional): pausas em segundos que substituem as do formato: `entrada` (antes da 1ª frase do bloco), `gap` (entre frases), `saida` (fim do bloco), `final` (fim do vídeo). Para um vídeo menos corrido, use junto com `"velocidade": "-5%"`, por exemplo `{"gap": 0.6, "saida": 0.5}`.
 - `formato` aceita `institucional` ou `propaganda`. A `trilha` é opcional. `demo` só é necessário quando houver blocos `demo`.
 - Cada **frase** vira um áudio. Ela pode ser texto simples (nas cenas) ou um objeto `{texto, antes, acoes}`:
   - `antes`: ações que rodam **antes** de a frase começar, como navegar, clicar ou digitar. A frase espera essas ações terminarem.

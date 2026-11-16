@@ -42,6 +42,7 @@ FORMATO = ROT.get("formato", "institucional")
 W, H = tamanho(ROT)
 RITMO = {"institucional": {"entrada": 0.4, "saida": 0.6, "gap": GAP, "final": 1.2},
          "propaganda": {"entrada": 0.1, "saida": 0.05, "gap": 0.25, "final": 1.0}}[FORMATO]
+RITMO = {**RITMO, **ROT.get("ritmo", {})}  # o roteiro pode alongar pausas: {"gap": 0.6, "saida": 0.4}
 NARR = None if args.previa else narracao(PASTA, ROT)
 DEMO = ROT.get("demo", {})
 PAINEL_W = int(DEMO.get("painel_largura", 380))
