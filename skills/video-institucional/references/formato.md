@@ -63,4 +63,4 @@ São dois tipos de bloco, intercalados:
 | Fundo | `#F7F8F6` |
 | Destaque | âmbar `#F59E0B` |
 | Fonte | Plus Jakarta Sans |
-| Logos | `marca/logo-branca.png` em cenas escuras, `marca/logo-azul.png` em cenas claras |
+| Logos | `marca/logo-branca.png` em cenas escuras, `marca/logo-azul.png` em cenas claras (marcadores "SUA MARCA": troque pela logo do cliente) |
