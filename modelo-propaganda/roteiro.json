@@ -1,0 +1,16 @@
+{
+ "titulo": "Conciliação de reembolsos com IA - propaganda 30s (exemplo fictício)",
+ "formato": "propaganda",
+ "voz": "pt-BR-FranciscaNeural",
+ "velocidade": "+12%",
+ "trilha": {"arquivo": "trilha.mp3", "volume": 0.22},
+ "blocos": [
+  {"id": "gancho", "tipo": "cena", "frases": ["Reembolso parado é dinheiro esquecido."]},
+  {"id": "problema", "tipo": "cena", "frases": ["Planilhas, conferência manual e semanas de espera."]},
+  {"id": "solucao", "tipo": "cena", "frases": ["Agora, a IA cruza cada recibo com o extrato.", "E aponta na hora o que não bate."]},
+  {"id": "recursos", "tipo": "cena", "frases": ["Leitura de recibos, conciliação automática, alertas de divergência e trilha de auditoria."]},
+  {"id": "prova", "tipo": "cena", "frases": ["O que levava semanas fica pronto em minutos."]},
+  {"id": "decisao", "tipo": "cena", "frases": ["Você revisa só o que importa.", "A IA aponta, sua equipe decide."]},
+  {"id": "cta", "tipo": "cena", "frases": ["Conciliação de reembolsos com IA.", "Fale com a gente."]}
+ ]
+}

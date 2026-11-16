@@ -1,0 +1,181 @@
+<!doctype html>
+<!--
+  APP DE EXEMPLO (fictício) para a demonstração do vídeo institucional.
+  - SPA em JavaScript puro, com rotas por hash: #/painel, #/revisao/<id>, #/decisao.
+  - Os dados vêm de /api/... e são respondidos pelo mock_api.py (o gravador intercepta as requisições).
+  - Os elementos que o roteiro.json marca ou clica têm data-video="..."; no roteiro use css=[data-video="..."].
+  - Pensado para 1440x810 com o painel lateral do gravador ocupando ~380px à direita (sobram ~1060px).
+  No seu projeto você não usa este arquivo: grava o seu próprio front (ver docstring do mock_api.py).
+-->
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conciliação de reembolsos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#14213D;--blue:#1F6FD1;--soft:#E7EEF7;--q:#5D6675;--line:#E1E6EE;--bg:#F5F7FA;--orange:#E07A1F;--orsoft:#FDF3E8;--green:#2E7D4F;--grsoft:#E6F4EC;--red:#C0392B;--redsoft:#FBEAEA}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'Plus Jakarta Sans',Segoe UI,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+.app{display:grid;grid-template-columns:210px 1fr;min-height:100vh}
+.side{background:var(--ink);color:#C9D4E5;padding:22px 14px;display:flex;flex-direction:column;gap:4px}
+.logo{color:#fff;font-weight:700;font-size:16px;line-height:1.25;padding:0 10px 20px}
+.logo small{display:block;font-weight:500;font-size:11px;color:#7FB2F0;letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.side a{display:flex;align-items:center;gap:10px;color:#C9D4E5;text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:600}
+.side a .i{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:12px}
+.side a.on{background:var(--blue);color:#fff}
+.side .user{margin-top:auto;font-size:12px;color:#8FA3C0;padding:10px}
+.main{padding:22px 28px 90px;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.top h1{font-size:22px;margin:0}
+.top .sub{color:var(--q);font-size:13px;margin-top:2px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--soft);color:var(--blue)}
+.b-alto{background:var(--redsoft);color:var(--red)} .b-medio{background:var(--orsoft);color:var(--orange)} .b-baixo{background:#EEF1F5;color:var(--q)}
+.b-ok{background:var(--grsoft);color:var(--green)} .b-desc{background:#EEF1F5;color:var(--q)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.kpi .l{font-size:12px;color:var(--q);font-weight:600}
+.kpi .v{font-size:26px;font-weight:700;margin-top:4px}
+.kpi .d{font-size:12px;color:var(--q);margin-top:2px}
+.box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.box h2{font-size:15px;margin:0 0 10px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--q);padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:10px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
+tr.click{cursor:pointer} tr.click:hover td{background:#F8FAFD}
+.mono{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.dl{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;font-size:13.5px}
+.dl dt{color:var(--q)} .dl dd{margin:0;font-weight:600}
+.ia{background:var(--soft);border:1px solid #BCD3F2;border-radius:14px;padding:14px 16px}
+.ia .k{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue)}
+.ia p{margin:6px 0 0;line-height:1.5}
+.ev{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.ev:last-child{border-bottom:0}
+.ev .dot{flex:none;width:10px;height:10px;border-radius:50%;margin-top:5px;background:var(--orange)}
+.btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;color:var(--ink);font:600 13.5px 'Plus Jakarta Sans',Arial;padding:9px 16px;border-radius:10px;cursor:pointer}
+.btn.pri{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.btn.sel{outline:3px solid #9EC1EC}
+textarea{width:100%;min-height:62px;border:1px solid var(--line);border-radius:10px;padding:10px;font:14px 'Plus Jakarta Sans',Arial;resize:none}
+.fila{display:flex;flex-direction:column;gap:8px}
+.fila .it{border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.fila .it.on{border-color:var(--blue);background:#F4F8FE}
+.muted{color:var(--q)}
+.row{display:flex;gap:10px;align-items:center}
+</style></head><body>
+<div class="app">
+ <nav class="side">
+  <div class="logo">Conciliação de reembolsos<small>dados fictícios</small></div>
+  <a href="#/painel" data-video="menu-painel" data-rota="painel"><span class="i">▦</span>Painel</a>
+  <a href="#/revisao/PED-0137" data-video="menu-revisao" data-rota="revisao"><span class="i">◎</span>Revisão</a>
+  <a href="#/decisao" data-video="menu-decisao" data-rota="decisao"><span class="i">✓</span>Decisão</a>
+  <div class="user">Júlia Souza (fictício)<br>analista de despesas</div>
+ </nav>
+ <main class="main" id="conteudo"><p class="muted">Carregando…</p></main>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const brl = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const api = async (caminho, opcoes) => { const r = await fetch(caminho, opcoes); if(!r.ok) throw new Error(caminho+': '+r.status); return r.json(); };
+const risco = r => `<span class="badge b-${r.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}">${r}</span>`;
+let selecionado = 'PED-0137';
+
+async function telaPainel(){
+  const [res, peds] = await Promise.all([api('/api/resumo'), api('/api/pedidos?sinalizados=1')]);
+  return `
+  <div class="top"><div><h1>Painel</h1><div class="sub">Competência ${res.competencia} · atualizado ${res.atualizado}</div></div></div>
+  <div class="kpis">
+   <div class="kpi" data-video="kpi-pedidos"><div class="l">Pedidos no mês</div><div class="v">${res.pedidos}</div><div class="d">${brl(res.valor_total)}</div></div>
+   <div class="kpi" data-video="kpi-conferidos"><div class="l">Conferidos pelas regras</div><div class="v">${res.conferidos_pct}%</div><div class="d">todos os pedidos, não amostra</div></div>
+   <div class="kpi" data-video="kpi-sinalizados"><div class="l">Sinalizados pela IA</div><div class="v" style="color:var(--orange)">${res.sinalizados}</div><div class="d">para revisão da analista</div></div>
+   <div class="kpi" data-video="kpi-valor"><div class="l">Valor em análise</div><div class="v">${brl(res.valor_sinalizado)}</div><div class="d">soma dos sinalizados</div></div>
+  </div>
+  <div class="box" data-video="tabela-sinalizados"><h2>Pedidos sinalizados, por risco</h2>
+   <table><thead><tr><th>Pedido</th><th>Colaborador</th><th>Categoria</th><th>Valor</th><th>Risco</th><th>Motivo do sinal</th></tr></thead><tbody>
+   ${peds.map(p=>`<tr class="click" data-video="linha-${p.id}" onclick="location.hash='#/revisao/${p.id}'">
+     <td class="mono">${p.id}</td><td>${p.colaborador}</td><td>${p.categoria}</td><td class="mono">${brl(p.valor)}</td><td>${risco(p.risco)}</td><td class="muted">${p.sinal}</td></tr>`).join('')}
+   </tbody></table></div>`;
+}
+
+async function telaRevisao(id){
+  const p = await api('/api/pedidos/'+id);
+  selecionado = id;
+  return `
+  <div class="top"><div><h1>Revisão · <span data-video="rev-id">${p.id}</span></h1><div class="sub">${p.categoria} · enviado em ${p.data}</div></div>
+   <div class="row">${risco(p.risco)} <span class="badge">${p.status}</span></div></div>
+  <div class="grid2">
+   <div class="box" data-video="rev-dados"><h2>Dados do pedido</h2>
+    <dl class="dl">
+     <dt>Colaborador</dt><dd>${p.colaborador}</dd>
+     <dt>Área</dt><dd>${p.area}</dd>
+     <dt>Estabelecimento</dt><dd>${p.estabelecimento}</dd>
+     <dt>Valor pedido</dt><dd><span data-video="rev-valor" style="font-size:18px">${brl(p.valor)}</span></dd>
+     <dt>Limite da política</dt><dd><span data-video="rev-limite">${brl(p.limite)} ${p.limite_obs}</span></dd>
+     <dt>Recibo</dt><dd><span data-video="rev-recibo">nº ${p.recibo}</span></dd>
+    </dl></div>
+   <div>
+    <div class="ia" data-video="rev-apontamento"><div class="k">Apontamento da IA</div><p>${p.apontamento}</p>
+     <p class="muted" style="font-size:12px">conferido pela IA revisora · ${p.confianca}</p></div>
+    <div class="box" style="margin-top:14px" data-video="rev-evidencias"><h2>Evidências</h2>
+     ${p.evidencias.map((e,i)=>`<div class="ev" data-video="rev-evidencia-${i+1}"><span class="dot"></span><div>${e}</div></div>`).join('')}
+    </div>
+   </div>
+  </div>
+  <div class="row"><a class="btn pri" href="#/decisao" data-video="rev-ir-decisao">Ir para a decisão →</a><span class="muted">a decisão é sempre da analista</span></div>`;
+}
+
+async function telaDecisao(){
+  const [fila, val] = await Promise.all([api('/api/pedidos?status=aguardando'), api('/api/validados')]);
+  if(!fila.find(p=>p.id===selecionado) && fila.length) selecionado = fila[0].id;
+  const atual = fila.find(p=>p.id===selecionado);
+  return `
+  <div class="top"><div><h1>Decisão</h1><div class="sub">Confirme ou descarte cada pedido sinalizado, com motivo</div></div>
+   <button class="btn pri" data-video="exportar" onclick="exportar(this)">⬇ Exportar validados</button></div>
+  <div class="grid2" style="grid-template-columns:300px 1fr">
+   <div class="box"><h2>Aguardando decisão (${fila.length})</h2><div class="fila" data-video="fila">
+    ${fila.map(p=>`<div class="it ${p.id===selecionado?'on':''}" data-video="fila-${p.id}" onclick="selecionado='${p.id}';render()">
+      <div class="row" style="justify-content:space-between"><b class="mono">${p.id}</b>${risco(p.risco)}</div>
+      <div class="muted" style="font-size:12.5px;margin-top:3px">${p.categoria} · ${brl(p.valor)}</div></div>`).join('') || '<p class="muted">Nenhum pedido pendente.</p>'}
+   </div></div>
+   <div class="box" data-video="form-decisao">${atual ? `<h2>${atual.id} · ${atual.categoria} · ${brl(atual.valor)}</h2>
+    <p class="muted" style="margin:0 0 10px">${atual.sinal}</p>
+    <div class="row" style="margin-bottom:10px">
+     <button class="btn" data-video="btn-confirmar" onclick="escolher(this,'confirmado')">✓ Confirmar irregularidade</button>
+     <button class="btn" data-video="btn-descartar" onclick="escolher(this,'descartado')">✕ Descartar apontamento</button></div>
+    <textarea data-video="motivo" id="motivo" placeholder="Motivo da decisão (obrigatório)"></textarea>
+    <div class="row" style="margin-top:10px"><button class="btn ok" data-video="btn-salvar" onclick="salvar()">Salvar decisão</button><span class="muted" id="aviso"></span></div>`
+    : '<p class="muted">Selecione um pedido.</p>'}</div>
+  </div>
+  <div class="box" data-video="tabela-validados"><h2>Casos validados (<span data-video="qtd-validados">${val.length}</span>)</h2>
+   <table><thead><tr><th>Pedido</th><th>Decisão</th><th>Motivo</th><th>Quem decidiu</th></tr></thead><tbody>
+   ${val.slice(0,4).map(v=>`<tr data-video="validado-${v.id}"><td class="mono">${v.id}</td><td><span class="badge ${v.decisao==='confirmado'?'b-ok':'b-desc'}">${v.decisao}</span></td><td>${v.motivo}</td><td class="muted">${v.autor}</td></tr>`).join('')}
+   </tbody></table>${val.length>4?`<div class="muted" style="margin-top:8px;font-size:12px">+ ${val.length-4} outros casos</div>`:''}</div>`;
+}
+
+let escolha = null;
+function escolher(b, d){ escolha = d; document.querySelectorAll('[data-video=btn-confirmar],[data-video=btn-descartar]').forEach(x=>x.classList.remove('sel')); b.classList.add('sel'); }
+async function salvar(){
+  const motivo = $('#motivo').value.trim();
+  if(!escolha || !motivo){ $('#aviso').textContent = 'Escolha a decisão e escreva o motivo.'; return; }
+  await api('/api/pedidos/'+selecionado+'/decisao', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({decisao: escolha, motivo})});
+  escolha = null; render();
+}
+async function exportar(b){
+  const r = await api('/api/exportacoes', {method:'POST'});
+  b.textContent = '✓ '+r.arquivo+' ('+r.linhas+' linhas)';
+}
+
+async function render(){
+  const h = location.hash || '#/painel';
+  const [, rota, arg] = h.split('/');
+  document.querySelectorAll('.side a').forEach(a=>a.classList.toggle('on', a.dataset.rota===rota));
+  try {
+    $('#conteudo').innerHTML = rota==='revisao' ? await telaRevisao(arg || selecionado)
+                             : rota==='decisao' ? await telaDecisao() : await telaPainel();
+  } catch(e){ $('#conteudo').innerHTML = '<p class="muted">Erro ao carregar: '+e.message+'</p>'; }
+  document.body.dataset.pronto = rota || 'painel';   // sinal para o gravador: a tela terminou de carregar
+}
+window.addEventListener('hashchange', ()=>{ document.body.dataset.pronto=''; render(); });
+render();
+</script>
+</body></html>

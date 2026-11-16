@@ -1,0 +1,102 @@
+{
+ "titulo": "Conciliação de reembolsos com IA - vídeo institucional",
+ "formato": "institucional",
+ "voz": "pt-BR-FranciscaNeural",
+ "velocidade": "+12%",
+ "demo": {
+  "url_base": "http://app-exemplo.local",
+  "interceptar": "http://app-exemplo.local/**",
+  "mock": "mock_api.py",
+  "deixar_passar": false,
+  "viewport": [1440, 810],
+  "escala": 1.3334,
+  "painel_largura": 380,
+  "legenda_margem_esquerda": 230,
+  "caso": "Caso: reembolso fora do padrão (fictício)"
+ },
+ "blocos": [
+  {"id": "abertura", "tipo": "cena", "frases": [
+   "Conciliação de reembolsos com inteligência artificial.",
+   "A IA aponta, a analista decide."
+  ]},
+  {"id": "dor", "tipo": "cena", "frases": [
+   "Hoje, cada reembolso é conferido à mão, nota a nota.",
+   "Sem tempo para todos, a conferência é por amostragem.",
+   "E o mesmo recibo em dois pedidos passa despercebido."
+  ]},
+  {"id": "proposta", "tipo": "cena", "frases": [
+   "Três pilares: regras da política em todos os pedidos.",
+   "Uma IA que explica por que o pedido é suspeito.",
+   "E a decisão da analista, sempre com motivo."
+  ]},
+  {"id": "roteiro_entregas", "tipo": "cena", "frases": [
+   "Agora, a ferramenta com três telas e a planilha dos validados.",
+   "Em seguida, a integração; depois, melhoria contínua."
+  ]},
+  {"id": "mapa", "tipo": "cena", "frases": [
+   "Os pedidos do mês entram pelo sistema de despesas.",
+   "Painel, Revisão e Decisão: do sinal da IA à decisão humana.",
+   "A saída é a planilha dos validados. Agora, um caso fictício."
+  ]},
+  {"id": "tela_painel", "tipo": "demo",
+   "card": {"tela": "Painel", "bloco": "Tela 1 · visão do mês", "entrega": "Disponível",
+            "faz": "Mostra os pedidos do mês, quantos a IA sinalizou e o valor em análise, ordenados por risco.",
+            "motivo": "Hoje a conferência é por amostragem e não há visão do mês inteiro.",
+            "ganho": "A analista começa pelos casos de maior risco."},
+   "frases": [
+    {"texto": "Primeira tela: Painel. Dos duzentos e quarenta e oito pedidos do mês, a IA sinalizou dezenove.",
+     "antes": [{"ir": "/#/painel"}, {"esperar": 600}],
+     "acoes": [{"painel": "faz"}, {"marcar": {"alvo": "css=[data-video=\"kpi-sinalizados\"]", "tipo": "anel", "etiqueta": "19 sinalizados", "spot": true}}]},
+    {"texto": "A motivação: em vez de uma amostra, as regras conferem todos os pedidos.",
+     "acoes": [{"painel": "motivo"}, {"marcar": {"alvo": "css=[data-video=\"kpi-conferidos\"]", "tipo": "anel", "etiqueta": "100% conferidos", "spot": false}}]},
+    {"texto": "O ganho: a analista começa pelo maior risco, o pedido cento e trinta e sete.",
+     "acoes": [{"painel": "ganho"}, {"marcar": {"alvo": "css=[data-video=\"linha-PED-0137\"]", "tipo": "sublinhado", "etiqueta": "maior risco", "spot": false}}]}
+   ]},
+  {"id": "bastidores", "tipo": "cena", "frases": [
+   "Por trás da tela: importação e regras da política em todos os pedidos.",
+   "A IA compara com o histórico, e uma segunda IA confere o apontamento.",
+   "A analista decide, e a exportação guarda a trilha."
+  ]},
+  {"id": "tela_revisao", "tipo": "demo",
+   "card": {"tela": "Revisão", "bloco": "Tela 2 · o caso", "entrega": "Disponível",
+            "faz": "Mostra o pedido, o limite da política, as evidências e o apontamento escrito pela IA.",
+            "motivo": "Achar um recibo repetido à mão exige cruzar planilhas de meses diferentes.",
+            "ganho": "Cada apontamento chega com a evidência, pronto para a decisão."},
+   "frases": [
+    {"texto": "Segunda tela: Revisão. O pedido cobra mil oitocentos e noventa reais de hospedagem, três vezes o limite.",
+     "antes": [{"ir": "/#/painel"}, {"esperar": 500}, {"clicar": "css=[data-video=\"linha-PED-0137\"]"}, {"esperar": 700}],
+     "acoes": [{"painel": "faz"}, {"marcar": {"alvo": "css=[data-video=\"rev-valor\"]", "tipo": "anel", "etiqueta": "3x o limite", "spot": true}}]},
+    {"texto": "A motivação: isso exigiria cruzar planilhas; aqui, a IA acha o mesmo recibo em outro pedido.",
+     "acoes": [{"painel": "motivo"}, {"marcar": {"alvo": "css=[data-video=\"rev-evidencia-1\"]", "tipo": "anel", "etiqueta": "recibo repetido", "spot": false}}]},
+    {"texto": "O ganho: o apontamento chega explicado, pronto para a decisão.",
+     "acoes": [{"painel": "ganho"}, {"marcar": {"alvo": "css=[data-video=\"rev-apontamento\"]", "tipo": "anel", "etiqueta": "apontamento da IA", "spot": false}}]}
+   ]},
+  {"id": "vinheta", "tipo": "cena", "frases": [
+   "Até aqui, a análise: o pedido apontado, com evidência.",
+   "A partir daqui, a decisão, e a planilha dos validados."
+  ]},
+  {"id": "tela_decisao", "tipo": "demo",
+   "card": {"tela": "Decisão", "bloco": "Tela 3 · decisão humana", "entrega": "Disponível",
+            "faz": "A analista confirma ou descarta cada pedido sinalizado, com motivo; os validados são exportados.",
+            "motivo": "A IA aponta, mas quem decide é a analista, com autoria registrada.",
+            "ganho": "Planilha dos casos validados, com decisão e motivo, pronta para o financeiro."},
+   "frases": [
+    {"texto": "Terceira tela: Decisão. A analista confirma a irregularidade e registra o motivo.",
+     "antes": [{"ir": "/#/decisao"}, {"esperar": 600}, {"clicar": "css=[data-video=\"fila-PED-0137\"]"}],
+     "acoes": [{"painel": "faz"}, {"clicar": "css=[data-video=\"btn-confirmar\"]"},
+               {"digitar": {"em": "css=[data-video=\"motivo\"]", "texto": "Recibo duplicado com o PED-0112"}},
+               {"marcar": {"alvo": "css=[data-video=\"motivo\"]", "tipo": "anel", "etiqueta": "motivo obrigatório", "spot": false}}]},
+    {"texto": "A motivação: a IA aponta, mas quem decide é a analista, com autoria registrada.",
+     "antes": [{"clicar": "css=[data-video=\"btn-salvar\"]"}, {"esperar": 600}],
+     "acoes": [{"painel": "motivo"}, {"marcar": {"alvo": "css=[data-video=\"validado-PED-0137\"]", "tipo": "anel", "etiqueta": "decisão com autoria", "spot": false}}]},
+    {"texto": "O ganho: os treze casos validados saem numa planilha, com decisão e motivo.",
+     "antes": [{"clicar": "css=[data-video=\"exportar\"]"}],
+     "acoes": [{"painel": "ganho"}, {"exportar": {"arquivo": "casos-validados.xlsx", "detalhe": "13 linhas · caso, decisão e motivo"}},
+               {"marcar": {"alvo": "css=[data-video=\"exportar\"]", "tipo": "anel", "etiqueta": "planilha dos validados", "spot": false}}]}
+   ]},
+  {"id": "fechamento", "tipo": "cena", "frases": [
+   "Em resumo: todos os pedidos conferidos, foco no maior risco e cada decisão com rastro.",
+   "A IA aponta, a pessoa decide."
+  ]}
+ ]
+}

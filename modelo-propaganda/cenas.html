@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>Modelo de propaganda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--navy:#14213D;--navy2:#0E1830;--azul:#1F6FD1;--azul2:#7FB2F0;--laranja:#E07A1F;--verde:#2E7D4F;--paper:#F7F8F6;--ambar:#F59E0B;--q:#4A5568;--line:#DCE2EA;--soft:#E7EEF7}
+*{box-sizing:border-box}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--navy);font-family:'Plus Jakarta Sans',Segoe UI,Arial,sans-serif;color:var(--navy);-webkit-font-smoothing:antialiased}
+.scene{position:absolute;inset:0;display:none;overflow:hidden;background:var(--paper)}
+.scene.on{display:block}
+.dark{background:radial-gradient(1200px 800px at 80% 10%,#1d3563 0%,rgba(20,33,61,0) 60%),radial-gradient(900px 700px at 0% 100%,#18305c 0%,rgba(20,33,61,0) 60%),var(--navy);color:#F4F6F8}
+.brand{position:absolute;right:96px;top:72px;height:34px;width:auto;opacity:.9}
+
+/* ---------- movimento base ---------- */
+[data-at]{opacity:0;transform:translateY(40px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.9,.25,1),box-shadow .5s,border-color .5s,background .5s,color .5s}
+[data-at].in{opacity:1;transform:none}
+[data-at].pop{transform:scale(.6)}
+[data-at].pop.in{transform:none;transition:opacity .35s ease,transform .6s cubic-bezier(.2,1.5,.4,1)}
+[data-at].esq{transform:translateX(-90px)}
+[data-at].dir{transform:translateX(90px)}
+[data-at].esq.in,[data-at].dir.in{transform:none}
+/* palavra que sobe por uma máscara */
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .04em .24em;margin:0 -.04em -.24em}
+.pt{margin-left:-.09em}
+.w>[data-at]{display:inline-block;transform:translateY(145%);opacity:1;transition:transform .55s cubic-bezier(.2,.9,.25,1)}
+.w>[data-at].in{transform:none}
+
+.k{font-weight:800;letter-spacing:-.035em;line-height:1.02;margin:0}
+.k1{font-size:136px}.k2{font-size:112px}.k3{font-size:92px}
+.azul{color:var(--azul)}.claro{color:var(--azul2)}.laranja{color:var(--laranja)}
+.sub{font-size:34px;font-weight:500;color:var(--q);margin:0}
+
+/* sublinhado que varre */
+.sweep{position:relative;display:inline-block}
+.sweep::after{content:"";position:absolute;left:0;right:0;bottom:-.13em;height:.085em;border-radius:99px;background:var(--laranja);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.9,.25,1) .45s}
+.in>.sweep::after,.sweep.in::after{transform:scaleX(1)}
+
+/* ---------- 1 gancho ---------- */
+.linhas{position:absolute;left:150px;right:0;top:700px;display:flex;flex-direction:column;gap:30px}
+.linha{display:flex;gap:14px;align-items:center}
+.linha i{display:block;height:14px;border-radius:99px;background:rgba(127,178,240,.16)}
+.linha.hit i{background:rgba(224,122,31,.18)}
+.linha.hit.in i{background:var(--laranja);box-shadow:0 0 28px rgba(224,122,31,.55)}
+.linha.hit{opacity:1;transform:none}
+.linha.hit::before{content:"";width:16px;height:16px;border-radius:50%;background:transparent;margin-left:-30px;transition:background .4s}
+.linha.hit.in::before{background:var(--laranja)}
+.deriva{animation:deriva 8s linear infinite}
+@keyframes deriva{from{transform:translateX(0)}to{transform:translateX(-60px)}}
+.gancho-txt{position:absolute;left:150px;top:250px;width:1640px}
+
+/* ---------- 2 problema ---------- */
+.painel{background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:0 30px 80px rgba(20,33,61,.12)}
+.alertas{position:absolute;left:1090px;top:250px;width:700px;padding:30px 30px 18px}
+.ph{font-size:20px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#8A96A6;margin:0 0 18px}
+.al{display:flex;align-items:center;gap:18px;padding:18px 20px;border-radius:16px;margin-bottom:14px;font-size:27px;font-weight:600}
+.al .ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;flex:none}
+.al.ok{background:var(--soft)}
+.al.ok .ic{background:var(--azul);color:#fff}
+.al.ok small{margin-left:auto;font-size:20px;color:var(--azul);font-weight:700}
+.al.fan{border:2.5px dashed #C9D1DB;color:#9AA5B4}
+.al.fan .ic{background:#FDF0E1;color:var(--laranja)}
+.al.fan small{margin-left:auto;font-size:20px;color:var(--laranja);font-weight:700}
+
+/* ---------- 3 hipotese ---------- */
+.mock{position:absolute;top:450px;left:150px;right:150px;display:flex;gap:40px;align-items:stretch}
+.inp{flex:1.05;padding:34px 38px}
+.inp .campo{margin-top:6px;min-height:172px;border:2.5px solid var(--azul);border-radius:18px;padding:22px 26px;font-size:31px;line-height:1.4;font-weight:500;background:#FBFCFE;box-shadow:0 0 0 7px rgba(31,111,209,.10)}
+.cursor{display:inline-block;width:3px;height:1.05em;background:var(--azul);vertical-align:-.15em;margin-left:2px;animation:pisca 1s steps(1) infinite}
+@keyframes pisca{50%{opacity:0}}
+.btn{display:inline-flex;align-items:center;gap:12px;font-size:25px;font-weight:700;padding:16px 28px;border-radius:14px}
+.btn.pri{background:var(--azul);color:#fff}
+.seta{align-self:center;flex:none}
+.res{flex:1;padding:34px 38px;display:flex;flex-direction:column}
+.cod{font:500 23px/1.6 Consolas,'Cascadia Mono',monospace;background:var(--navy);color:#C9D6EA;border-radius:16px;padding:20px 24px;margin-top:6px}
+.cod b{color:var(--azul2);font-weight:600}.cod em{color:#F2B880;font-style:normal}
+.tag{display:inline-flex;align-items:center;gap:8px;font-size:20px;font-weight:700;padding:7px 14px;border-radius:99px}
+.tag.v{background:#E3F1E8;color:var(--verde)}.tag.a{background:var(--soft);color:var(--azul)}.tag.o{background:#FDF0E1;color:#A4560F}
+.resn{display:flex;align-items:baseline;gap:16px;margin-top:auto;padding-top:20px}
+.resn .n{font-size:84px;font-weight:800;color:var(--azul);letter-spacing:-.03em;line-height:1}
+.resn .l{font-size:27px;font-weight:600;color:var(--q)}
+
+/* ---------- 4 motores ---------- */
+.engs{position:absolute;left:150px;right:150px;top:500px;display:grid;grid-template-columns:repeat(5,1fr);gap:26px}
+.eng{border-radius:26px;padding:32px 28px 30px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.12);min-height:290px}
+.eng[data-at]{opacity:.32;transform:scale(.97)}
+.eng[data-at].in{opacity:1;transform:none;background:rgba(31,111,209,.16);border-color:var(--azul2);box-shadow:0 0 0 1px rgba(127,178,240,.3),0 24px 70px rgba(31,111,209,.38)}
+.eng .ico{width:74px;height:74px;border-radius:20px;background:rgba(127,178,240,.14);display:flex;align-items:center;justify-content:center;transition:background .5s}
+.eng.in .ico{background:var(--azul)}
+.eng svg{width:40px;height:40px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.eng h3{font-size:38px;font-weight:800;margin:26px 0 10px;letter-spacing:-.02em}
+.eng p{font-size:25px;line-height:1.3;margin:0;color:#B9C7DB}
+.eng .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#55657F;margin-right:10px;vertical-align:1px;transition:background .4s}
+.eng.in .dot{background:var(--ambar);box-shadow:0 0 14px var(--ambar)}
+.varre{position:absolute;left:150px;right:150px;top:900px;height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.varre i{position:absolute;inset:0;background:linear-gradient(90deg,var(--azul),var(--azul2));transform:scaleX(0);transform-origin:left;transition:transform 2.6s cubic-bezier(.4,0,.2,1)}
+.varre.in i{transform:scaleX(1)}
+.varre-l{position:absolute;left:150px;top:930px;font-size:24px;color:#8FA3C0;font-weight:600}
+
+/* ---------- 5 decisao ---------- */
+.caso{position:absolute;left:130px;top:150px;width:960px;padding:40px 44px}
+.caso .top{display:flex;align-items:center;gap:14px}
+.caso h3{font-size:44px;font-weight:800;margin:18px 0 6px;letter-spacing:-.02em}
+.caso .meta{font-size:24px;color:var(--q)}
+.score{position:absolute;right:44px;top:36px;width:180px;height:180px}
+.score svg{width:180px;height:180px;transform:rotate(-90deg)}
+.score .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:56px;font-weight:800;color:var(--navy);line-height:1}
+.score .num small{font-size:12px;font-weight:700;letter-spacing:1px;color:#8A96A6;margin-top:6px;text-transform:uppercase;text-align:center;line-height:1.25}
+circle.arco{stroke-dasharray:440;stroke-dashoffset:440;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.9,.25,1)}
+[data-at].arco{opacity:1;transform:none}
+circle.arco.in{stroke-dashoffset:35}
+.expo{display:flex;align-items:baseline;gap:14px;margin-top:26px}
+.expo .n{font-size:62px;font-weight:800;color:var(--laranja);letter-spacing:-.02em}
+.expo .l{font-size:26px;color:var(--q);font-weight:600}
+.just{margin-top:24px;border-radius:20px;background:#F3F7FD;border:1.5px solid #D6E4F6;padding:24px 28px}
+.just .ph{margin-bottom:10px;color:var(--azul)}
+.just p{font-size:27px;line-height:1.45;margin:0;color:var(--navy)}
+.just .tags{display:flex;gap:12px;margin-top:16px}
+.acoes{display:flex;gap:18px;margin-top:28px;align-items:center}
+.btn.ok{background:#fff;border:2.5px solid var(--verde);color:var(--verde);transition:all .4s}
+.btn.ok.in{background:var(--verde);color:#fff;box-shadow:0 12px 30px rgba(46,125,79,.35)}
+[data-at].btn.ok{opacity:1;transform:none}
+.btn.out{border:2.5px solid #C9D1DB;color:var(--q)}
+.lado{position:absolute;left:1170px;top:330px;width:660px}
+.lado>div{position:absolute;left:0;top:0;width:660px}
+
+/* ---------- 6 cta ---------- */
+.cta{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.glow{position:absolute;left:50%;top:50%;width:1400px;height:1400px;margin:-700px 0 0 -700px;border-radius:50%;background:radial-gradient(circle,rgba(31,111,209,.35) 0%,rgba(31,111,209,0) 60%);animation:respira 4s ease-in-out infinite}
+@keyframes respira{50%{transform:scale(1.08)}}
+.on .ent{animation:entra .8s cubic-bezier(.2,.9,.25,1) both}
+@keyframes entra{from{opacity:0;transform:translateY(40px) scale(.96)}to{opacity:1;transform:none}}
+.cta .chama{display:inline-flex;align-items:center;gap:18px;font-size:46px;font-weight:800;padding:26px 52px;border-radius:999px;background:var(--laranja);color:#fff;box-shadow:0 20px 60px rgba(224,122,31,.45)}
+
+/* ---------- extras do modelo ---------- */
+.planilha{position:absolute;left:1090px;top:250px;width:700px;padding:28px 30px}
+.grade{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px}
+.grade span{height:40px;border-radius:8px;background:#EEF1F5}
+.grade span.h{background:#DCE2EA}
+.relogio{position:absolute;right:-26px;top:-30px;background:var(--laranja);color:#fff;font-size:30px;font-weight:800;padding:14px 26px;border-radius:999px;box-shadow:0 14px 34px rgba(224,122,31,.4)}
+.cruza{position:absolute;left:150px;right:150px;top:440px;display:grid;grid-template-columns:1fr 160px 1fr;align-items:start}
+.col{padding:26px 28px}
+.lin{display:flex;align-items:center;justify-content:space-between;font-size:27px;font-weight:600;padding:16px 20px;border-radius:14px;background:#F3F6FA;margin-top:12px;transition:background .5s,color .5s,box-shadow .5s}
+.lin small{font-size:22px;color:var(--q);font-weight:600}
+.liga{display:flex;flex-direction:column;align-items:center;padding-top:96px;gap:12px}
+.liga span{width:64px;height:58px;display:flex;align-items:center;justify-content:center;border-radius:14px;font-size:28px;font-weight:800;background:#E3F1E8;color:var(--verde)}
+.liga span.x{background:#FDF0E1;color:var(--laranja)}
+.lin.ruim.in{background:#FDF0E1;color:#A4560F;box-shadow:inset 0 0 0 2.5px var(--laranja)}
+[data-at].lin.ruim{opacity:1;transform:none}
+.tiles4{position:absolute;left:150px;right:150px;top:470px;display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.kpis{position:absolute;left:150px;right:150px;top:560px;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.kpi{padding:34px 36px}
+.kpi .n{font-size:88px;font-weight:800;letter-spacing:-.03em;color:var(--azul);line-height:1}
+.kpi .l{font-size:27px;font-weight:600;color:var(--q);margin-top:12px}
+.risca{position:relative;display:inline-block}
+.risca::after{content:"";position:absolute;left:-2%;right:-2%;top:54%;height:.09em;background:var(--laranja);border-radius:99px;transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.9,.25,1) .5s}
+.in>.risca::after{transform:scaleX(1)}
+</style></head><body>
+
+<!--
+  MODELO DE PROPAGANDA (30 a 45 s) · exemplo fictício: "Conciliação de reembolsos com IA".
+  Estrutura: gancho -> problema -> solução -> recursos -> prova -> decisão humana -> CTA.
+  Como adaptar:
+  - Troque os textos grandes (classe .k) pelas palavras-chave da fala de cada bloco do roteiro.json.
+    O texto grande resume a fala; não precisa repeti-la palavra por palavra. Não há legenda (.cap) neste formato.
+  - Os ids das <section> são os ids dos blocos do roteiro. data-at="k" = aparece na frase k (0, 1, ...);
+    data-delay = atraso em segundos dentro da frase (use para acompanhar o ritmo da fala); data-out="k" = some na frase k.
+  - Palavra que sobe por máscara: <span class="w"><span data-at="0" data-delay="0.1">Palavra</span></span>.
+  - Ponto final em título grande: <span class="pt">.</span> (a fonte deixa espaço demais antes do ponto).
+  - Destaques: class="sweep" (sublinhado laranja que varre), class="risca" (risco que corta a palavra).
+  - Entrada: padrão sobe; class="pop" cresce; class="esq"/"dir" desliza de lado.
+  - Contador: data-count="1284" (anima de 0 ao valor quando ganha "in"). Digitação: data-type="texto" data-type-dur="1.2".
+  - Números nas telas: sempre fictícios e plausíveis. Sem nomes de clientes, outras marcas nem dados reais.
+  - Logos: marca/logo-branca.png (fundo escuro) e marca/logo-azul.png (fundo claro).
+-->
+
+<!-- 1 · GANCHO (2 a 3 s): uma frase curta que prende nos 2 primeiros segundos -->
+<section class="scene dark" id="gancho">
+ <div class="linhas deriva">
+  <div class="linha"><i style="width:180px"></i><i style="width:260px"></i><i style="width:120px"></i><i style="width:220px"></i><i style="width:150px"></i><i style="width:300px"></i></div>
+  <div class="linha hit" data-at="0" data-delay="1.0"><i style="width:240px"></i><i style="width:140px"></i><i style="width:280px"></i><i style="width:120px"></i><i style="width:200px"></i></div>
+  <div class="linha"><i style="width:150px"></i><i style="width:300px"></i><i style="width:180px"></i><i style="width:90px"></i><i style="width:260px"></i><i style="width:160px"></i></div>
+  <div class="linha"><i style="width:260px"></i><i style="width:120px"></i><i style="width:220px"></i><i style="width:180px"></i><i style="width:140px"></i></div>
+ </div>
+ <div class="gancho-txt">
+  <p class="k k1"><span class="w"><span data-at="0">Reembolso</span></span> <span class="w"><span data-at="0" data-delay="0.12">parado</span></span></p>
+  <p class="k k1"><span class="w"><span data-at="0" data-delay="0.35">é dinheiro</span></span> <span class="w"><span data-at="0" data-delay="0.55" class="claro"><span class="sweep">esquecido<span class="pt">.</span></span></span></span></p>
+ </div>
+</section>
+
+<!-- 2 · PROBLEMA (3 s): a dor em poucas palavras + um elemento visual do jeito antigo -->
+<section class="scene" id="problema">
+ <img class="brand" src="marca/logo-azul.png" alt="Marca">
+ <div style="position:absolute;left:150px;top:300px;width:900px">
+  <p class="k k3"><span class="w"><span data-at="0">Planilhas<span class="pt">.</span></span></span></p>
+  <p class="k k3" style="margin-top:10px;color:var(--q)"><span class="w"><span data-at="0" data-delay="0.5">Conferência manual<span class="pt">.</span></span></span></p>
+  <p class="k k3 laranja" style="margin-top:10px"><span class="w"><span data-at="0" data-delay="1.2"><span class="sweep">Semanas de espera<span class="pt">.</span></span></span></span></p>
+ </div>
+ <div class="painel planilha dir" data-at="0" data-delay="0.1">
+  <p class="ph">conferencia_reembolsos_final_v7.xlsx</p>
+  <div class="grade">
+   <span class="h"></span><span class="h"></span><span class="h"></span>
+   <span></span><span></span><span></span><span></span><span></span><span></span>
+   <span></span><span></span><span></span><span></span><span></span><span></span>
+   <span></span><span></span><span></span><span></span><span></span><span></span>
+   <span></span><span></span><span></span>
+  </div>
+  <div class="relogio pop" data-at="0" data-delay="1.3">+18 dias</div>
+ </div>
+</section>
+
+<!-- 3 · SOLUÇÃO (4 a 6 s): o produto em ação, num mockup simples -->
+<section class="scene" id="solucao">
+ <img class="brand" src="marca/logo-azul.png" alt="Marca">
+ <div style="position:absolute;left:150px;top:120px">
+  <p class="k k2"><span class="w"><span data-at="0" data-out="1">A IA cruza cada recibo</span></span></p>
+  <p class="k k2 azul"><span class="w"><span data-at="0" data-out="1" data-delay="0.25">com o extrato<span class="pt">.</span></span></span></p>
+ </div>
+ <div style="position:absolute;left:150px;top:120px">
+  <p class="k k2"><span class="w"><span data-at="1">E aponta na hora</span></span></p>
+  <p class="k k2 laranja"><span class="w"><span data-at="1" data-delay="0.15"><span class="sweep">o que não bate<span class="pt">.</span></span></span></span></p>
+ </div>
+ <div class="cruza">
+  <div class="painel col esq" data-at="0" data-delay="0.3">
+   <p class="ph">Recibos enviados</p>
+   <div class="lin">Consulta · 12/03 <small>R$ 380,00</small></div>
+   <div class="lin">Exame · 14/03 <small>R$ 215,40</small></div>
+   <div class="lin ruim" data-at="1" data-delay="0.2">Terapia · 18/03 <small>R$ 900,00</small></div>
+  </div>
+  <div class="liga">
+   <span class="pop" data-at="0" data-delay="1.4">✓</span>
+   <span class="pop" data-at="0" data-delay="1.7">✓</span>
+   <span class="x pop" data-at="1" data-delay="0.3">≠</span>
+  </div>
+  <div class="painel col dir" data-at="0" data-delay="0.6">
+   <p class="ph">Extrato do banco</p>
+   <div class="lin">12/03 · crédito <small>R$ 380,00</small></div>
+   <div class="lin">14/03 · crédito <small>R$ 215,40</small></div>
+   <div class="lin ruim" data-at="1" data-delay="0.2">18/03 · crédito <small>R$ 450,00</small></div>
+  </div>
+ </div>
+</section>
+
+<!-- 4 · RECURSOS (4 a 5 s): 3 a 5 cartões que acendem um a um, no ritmo da fala -->
+<section class="scene dark" id="recursos">
+ <img class="brand" src="marca/logo-branca.png" alt="Marca">
+ <div style="position:absolute;left:150px;top:150px">
+  <p class="k k1"><span class="w"><span data-at="0">Tudo em</span></span> <span class="w"><span data-at="0" data-delay="0.1" class="claro">um só lugar<span class="pt">.</span></span></span></p>
+ </div>
+ <div class="tiles4">
+  <div class="eng" data-at="0" data-delay="0.2"><div class="ico"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg></div><h3>Leitura de recibos</h3><p><span class="dot"></span>foto ou PDF, sem digitar</p></div>
+  <div class="eng" data-at="0" data-delay="1.3"><div class="ico"><svg viewBox="0 0 24 24"><path d="M4 8h12l-3-3M20 16H8l3 3"/></svg></div><h3>Conciliação</h3><p><span class="dot"></span>recibo × extrato, automática</p></div>
+  <div class="eng" data-at="0" data-delay="2.4"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></div><h3>Alertas</h3><p><span class="dot"></span>divergência na hora</p></div>
+  <div class="eng" data-at="0" data-delay="3.5"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div><h3>Trilha de auditoria</h3><p><span class="dot"></span>quem fez, quando e por quê</p></div>
+ </div>
+</section>
+
+<!-- 5 · PROVA (2 a 3 s): contraste antes/depois + números fictícios que contam -->
+<section class="scene" id="prova">
+ <img class="brand" src="marca/logo-azul.png" alt="Marca">
+ <div style="position:absolute;left:150px;top:190px">
+  <p class="k k1"><span class="w"><span data-at="0" style="color:#8A96A6"><span class="risca">Semanas</span></span></span> <span class="w"><span data-at="0" data-delay="0.55" class="azul">minutos<span class="pt">.</span></span></span></p>
+ </div>
+ <div class="kpis">
+  <div class="painel kpi pop" data-at="0" data-delay="0.5"><div class="n"><span data-count="1284" data-at="0" data-delay="0.6" style="opacity:1;transform:none">0</span></div><div class="l">reembolsos conferidos</div></div>
+  <div class="painel kpi pop" data-at="0" data-delay="0.7"><div class="n laranja">R$ <span data-count="42300" data-at="0" data-delay="0.8" style="opacity:1;transform:none">0</span></div><div class="l">em divergências apontadas</div></div>
+  <div class="painel kpi pop" data-at="0" data-delay="0.9"><div class="n" style="color:var(--verde)"><span data-count="7" data-at="0" data-delay="1.0" style="opacity:1;transform:none">0</span> min</div><div class="l">por lote</div></div>
+ </div>
+</section>
+
+<!-- 6 · DECISÃO HUMANA (4 a 5 s): o caso com a justificativa da IA e a decisão de uma pessoa -->
+<section class="scene" id="decisao">
+ <img class="brand" src="marca/logo-azul.png" alt="Marca">
+ <div class="painel caso esq" data-at="0">
+  <div class="top"><span class="tag o">REEMBOLSO #R-2207</span><span class="tag" style="background:#FEF3DC;color:#946200">● divergência</span></div>
+  <h3>Terapia · 18/03</h3>
+  <div class="meta">Colaborador fictício · centro de custo exemplo</div>
+  <div class="score">
+   <svg viewBox="0 0 170 170"><circle cx="85" cy="85" r="70" stroke="#E7EEF7" stroke-width="14" fill="none"/><circle class="arco" data-at="0" data-delay="0.3" cx="85" cy="85" r="70" stroke="#F59E0B" stroke-width="14" fill="none" stroke-linecap="round"/></svg>
+   <div class="num"><span data-count="88" data-at="0" data-delay="0.3" style="opacity:1;transform:none">0</span><small>confiança<br>da IA</small></div>
+  </div>
+  <div class="expo"><span class="n">R$ 450,00</span><span class="l">de diferença</span></div>
+  <div class="just" data-at="0" data-delay="0.45">
+   <p class="ph">Justificativa da IA</p>
+   <p>O recibo soma R$ 900,00, mas o extrato mostra um crédito de R$ 450,00 na mesma data.</p>
+   <div class="tags"><span class="tag a">✓ recibo lido</span><span class="tag a">✓ extrato cruzado</span></div>
+  </div>
+  <div class="acoes"><span class="btn ok" data-at="1" data-delay="1.4">✓ Confirmar</span><span class="btn out">Descartar</span><span class="tag v" data-at="1" data-delay="1.7">motivo registrado</span></div>
+ </div>
+ <div class="lado">
+  <div>
+   <p class="k k3"><span class="w"><span data-at="0" data-out="1" data-delay="0.2">Revise só</span></span></p>
+   <p class="k k3 azul"><span class="w"><span data-at="0" data-out="1" data-delay="0.32">o que importa<span class="pt">.</span></span></span></p>
+  </div>
+  <div>
+   <p class="k k3"><span class="w"><span data-at="1" data-delay="0.15">A IA aponta<span class="pt">.</span></span></span></p>
+   <p class="k k3 azul" style="margin-top:14px"><span class="w"><span data-at="1" data-delay="0.9">Sua equipe</span></span></p>
+   <p class="k k3 azul"><span class="w"><span data-at="1" data-delay="1.02"><span class="sweep">decide<span class="pt">.</span></span></span></span></p>
+  </div>
+ </div>
+</section>
+
+<!-- 7 · CTA (3 a 4 s, com ~1,5 s parado no fim): marca, nome do produto e chamada curta -->
+<section class="scene dark" id="cta">
+ <div class="glow"></div>
+ <div class="cta">
+  <img class="ent" src="marca/logo-branca.png" alt="Marca" style="height:64px;width:auto">
+  <p class="k k1" style="margin-top:56px;font-size:108px" data-at="0" data-delay="0.1">Conciliação de reembolsos <span class="claro">com IA</span></p>
+  <p class="sub" style="color:#B9C7DB;margin-top:26px;font-size:38px" data-at="0" data-delay="0.4">A IA aponta. Sua equipe decide.</p>
+  <div style="margin-top:64px" class="pop" data-at="1"><span class="chama">Fale com a gente <span style="font-size:40px">→</span></span></div>
+  <p class="sub" style="color:#8FA3C0;margin-top:34px;font-size:28px;letter-spacing:1px" data-at="1" data-delay="0.25">seusite.com.br</p>
+ </div>
+</section>
+
+<script>
+window.__mostrar = function(id){
+  document.querySelectorAll('.scene').forEach(s=>{s.classList.remove('on'); s.querySelectorAll('.in,.active').forEach(e=>e.classList.remove('in','active'));});
+  const sc=document.getElementById(id); if(!sc) throw new Error('cena não encontrada: '+id); sc.classList.add('on');
+  const cap=sc.querySelector('.cap'); if(cap) cap.textContent='';
+};
+window.__frase = function(id,k,texto){
+  const sc=document.getElementById(id); const cap=sc.querySelector('.cap'); if(cap) cap.textContent=texto;
+  sc.querySelectorAll('[data-at]').forEach(e=>{ if(+e.dataset.at===k){ e.style.transitionDelay=(e.dataset.delay||0)+'s'; e.classList.add('in'); }});
+  sc.querySelectorAll('[data-out]').forEach(e=>{ if(+e.dataset.out===k) e.classList.remove('in'); });
+  const grp=[...sc.querySelectorAll('[data-grp]')].filter(e=>e.classList.contains('in'));
+  sc.querySelectorAll('[data-grp]').forEach(e=>e.classList.remove('active')); if(grp.length) grp[grp.length-1].classList.add('active');
+};
+
+/* Auxiliares: contador (data-count) e digitação (data-type) disparados quando o elemento ganha "in". */
+(function(){
+  const fmt = n => n.toLocaleString('pt-BR');
+  function animar(el){
+    const atraso = (+el.dataset.delay||0)*1000;
+    clearTimeout(el.__t); cancelAnimationFrame(el.__r);
+    if(el.dataset.count!==undefined){
+      const alvo=+el.dataset.count, dur=900; el.textContent='0';
+      el.__t=setTimeout(()=>{ const t0=performance.now();
+        const passo=t=>{ const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3); el.textContent=fmt(Math.round(alvo*e)); if(p<1) el.__r=requestAnimationFrame(passo); };
+        el.__r=requestAnimationFrame(passo); }, atraso);
+    }
+    if(el.dataset.type!==undefined){
+      const txt=el.dataset.type, dur=(+el.dataset.typeDur||1.2)*1000; el.textContent='';
+      el.__t=setTimeout(()=>{ const t0=performance.now();
+        const passo=t=>{ const p=Math.min(1,(t-t0)/dur); el.textContent=txt.slice(0,Math.round(txt.length*p)); if(p<1) el.__r=requestAnimationFrame(passo); };
+        el.__r=requestAnimationFrame(passo); }, atraso);
+    }
+  }
+  function zerar(el){ clearTimeout(el.__t); cancelAnimationFrame(el.__r); el.textContent = el.dataset.count!==undefined ? '0' : ''; }
+  const alvos=document.querySelectorAll('[data-count],[data-type]');
+  const mo=new MutationObserver(ms=>ms.forEach(m=>{ const el=m.target, tem=el.classList.contains('in'), tinha=(m.oldValue||'').split(/\s+/).includes('in');
+    if(tem&&!tinha) animar(el); else if(!tem&&tinha) zerar(el); }));
+  alvos.forEach(el=>{ zerar(el); mo.observe(el,{attributes:true,attributeFilter:['class'],attributeOldValue:true}); });
+})();
+</script>
+</body></html>
