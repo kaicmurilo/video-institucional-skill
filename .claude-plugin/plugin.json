@@ -1,0 +1,9 @@
+{
+  "name": "video-institucional",
+  "version": "1.1.0",
+  "description": "Vídeos narrados em pt-BR (1080p) de produtos de software: tutorial/institucional com demo gravada na ferramenta real, ou propaganda curta.",
+  "author": {
+    "name": "Kaic Murilo",
+    "url": "https://github.com/kaicmurilo"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "video-institucional-skill",
+  "description": "Skill de vídeos narrados de produtos de software.",
+  "owner": {
+    "name": "Kaic Murilo",
+    "url": "https://github.com/kaicmurilo"
+  },
+  "plugins": [
+    {
+      "name": "video-institucional",
+      "description": "Vídeos narrados em pt-BR (1080p): tutorial/institucional com demo gravada ou propaganda curta.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

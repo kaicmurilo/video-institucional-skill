@@ -1,23 +1,50 @@
-# video-institucional (skill do Claude Code)
+# video-institucional (plugin do Claude Code)
 
-Skill que gera vídeos narrados em pt-BR (1080p) de um produto de software: tutorial/institucional com demo gravada na ferramenta real, ou propaganda curta. Instruções da skill: [`SKILL.md`](SKILL.md). Guia de uso: [`LEIA-ME.md`](LEIA-ME.md).
+Skill que gera vídeos narrados em pt-BR (1080p) de um produto de software: tutorial/institucional com demo gravada na ferramenta real, ou propaganda curta. Instruções da skill: [`skills/video-institucional/SKILL.md`](skills/video-institucional/SKILL.md). Guia de uso: [`LEIA-ME.md`](skills/video-institucional/LEIA-ME.md).
 
 ## Instalação
 
-A skill fica em `~/.claude/skills/video-institucional/`. No myvault ela é um submódulo:
+No Claude Code:
 
-```bash
-git -C ~/.claude submodule update --init skills/video-institucional
+```
+/plugin marketplace add kaicmurilo/video-institucional-skill
+/plugin install video-institucional@video-institucional-skill
 ```
 
-Fora do myvault:
+Ou pelo terminal:
 
 ```bash
-git clone https://github.com/kaicmurilo/video-institucional-skill.git ~/.claude/skills/video-institucional
+claude plugin marketplace add kaicmurilo/video-institucional-skill
+claude plugin install video-institucional@video-institucional-skill
 ```
 
-Pré-requisitos: `python3 scripts/verificar_ambiente.py` (Python 3.10+, playwright, edge-tts, ffmpeg).
+O repositório é privado: a máquina precisa de acesso ao GitHub (`gh auth login` ou chave SSH).
+
+Depois, confira o ambiente (Python 3.10+, playwright, edge-tts, ffmpeg):
+
+```bash
+python3 ~/.claude/plugins/cache/video-institucional-skill/video-institucional/*/skills/video-institucional/scripts/verificar_ambiente.py
+```
+
+## Atualizar
+
+```bash
+claude plugin marketplace update video-institucional-skill
+claude plugin update video-institucional@video-institucional-skill
+```
 
 ## Melhorias
 
-Problemas encontrados em uso viram issues neste repositório. Correção → commit aqui (`fix: ...`) → no myvault, `git -C ~/.claude add skills/video-institucional && git commit -m "chore: atualiza skill video-institucional"` para fixar a nova versão.
+Problemas encontrados em uso viram issues neste repositório. Cada correção sobe a `version` em `.claude-plugin/plugin.json` (o Claude Code só atualiza o plugin quando a versão muda).
+
+## Estrutura
+
+```
+.claude-plugin/
+  plugin.json        # manifesto do plugin
+  marketplace.json   # marketplace com este único plugin
+skills/video-institucional/
+  SKILL.md           # instruções da skill
+  scripts/           # pipeline: verificar, gravar, narrar, montar
+  modelo/, modelo-propaganda/, references/
+```
